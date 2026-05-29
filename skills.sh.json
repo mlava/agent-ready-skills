@@ -1,0 +1,17 @@
+{
+  "$schema": "https://www.skills.sh/schema.json",
+  "name": "Agent Ready Skills",
+  "description": "Skills for using Agent Ready — score any URL for AI agent-readability via the REST API or MCP server.",
+  "homepage": "https://agent-ready.dev",
+  "documentation": "https://agent-ready.dev/docs/api",
+  "tags": [
+    "agent-readability",
+    "scanner",
+    "seo",
+    "llms-txt",
+    "mcp",
+    "vercel-spec",
+    "ai-search",
+    "validator"
+  ]
+}
