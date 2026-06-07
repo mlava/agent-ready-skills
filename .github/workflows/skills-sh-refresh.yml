@@ -1,0 +1,47 @@
+name: Refresh skills.sh snapshot
+
+# Why this exists:
+# skills.sh does not live-mirror GitHub — it renders each skill's docs from a
+# content snapshot captured at `npx skills add` time. If a SKILL.md changes but
+# nobody re-installs, the public page keeps showing the stale body (or, once the
+# repo page is evicted, "No SKILL.md available"). This workflow re-installs each
+# skill via the current CLI whenever its SKILL.md changes, so the rendered docs
+# on skills.sh stay in sync with `main`.
+#
+# Scope is deliberately push-on-change + manual only (no daily cron): the goal is
+# content freshness, not pumping install counts. Ranking is driven by *real*
+# installs, and CI telemetry is commonly filtered anyway.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "skills/**/SKILL.md"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Don't pile up redundant refreshes if several pushes land quickly.
+concurrency:
+  group: skills-sh-refresh
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    name: Re-install skills to refresh skills.sh content snapshot
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # Explicit per-skill `skills/<name>` paths are what reliably re-capture
+      # each SKILL.md body (the bare skill name resolves against the repo root
+      # and finds nothing). Each install clones into an ephemeral workspace —
+      # we only care about the telemetry it emits, not the installed files.
+      - name: Refresh agent-ready-api
+        run: npx -y skills@latest add mlava/agent-ready-skills/skills/agent-ready-api --yes
+
+      - name: Refresh agent-ready-mcp
+        run: npx -y skills@latest add mlava/agent-ready-skills/skills/agent-ready-mcp --yes

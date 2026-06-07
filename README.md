@@ -4,6 +4,14 @@
 
 Install one of the skills below and your AI agent can run scans, fetch results, and search the Agent Ready docs without any further setup.
 
+Or add both at once with the whole-repo form:
+
+```bash
+npx skills add mlava/agent-ready-skills
+```
+
+Browse the rendered docs on skills.sh: <https://www.skills.sh/mlava/agent-ready-skills>
+
 ## Skills
 
 ### [`agent-ready-api`](skills/agent-ready-api/SKILL.md)
@@ -17,7 +25,7 @@ Use the REST API directly. Best when:
 Install:
 
 ```bash
-npx skills add mlava/agent-ready-skills/agent-ready-api
+npx skills add mlava/agent-ready-skills/skills/agent-ready-api
 ```
 
 ### [`agent-ready-mcp`](skills/agent-ready-mcp/SKILL.md)
@@ -31,7 +39,7 @@ Use the MCP server (`agent-ready-mcp` on npm) inside Claude Desktop, Claude Code
 Install:
 
 ```bash
-npx skills add mlava/agent-ready-skills/agent-ready-mcp
+npx skills add mlava/agent-ready-skills/skills/agent-ready-mcp
 ```
 
 ## What is Agent Ready?
@@ -63,6 +71,7 @@ The `ask` tool (NLWeb-style search over Agent Ready's docs) is **public** and wo
 
 ## Reference
 
+- Browse on skills.sh: <https://www.skills.sh/mlava/agent-ready-skills>
 - Agent Ready homepage: <https://agent-ready.dev>
 - API quickstart: <https://agent-ready.dev/quickstart>
 - API docs: <https://agent-ready.dev/docs/api>
