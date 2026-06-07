@@ -4,7 +4,7 @@
 
 Install one of the skills below and your AI agent can run scans, fetch results, and search the Agent Ready docs without any further setup.
 
-Or add both at once with the whole-repo form:
+Or add all three at once with the whole-repo form:
 
 ```bash
 npx skills add mlava/agent-ready-skills
@@ -42,6 +42,20 @@ Install:
 npx skills add mlava/agent-ready-skills/skills/agent-ready-mcp
 ```
 
+### [`agent-ready-cli`](skills/agent-ready-cli/SKILL.md)
+
+Use the `agent-ready` command-line client (`agent-ready-scanner` on npm). Best when:
+
+- The agent can run shell commands and you want one command, zero wiring
+- You don't want to install an MCP server or write fetch/polling code
+- You're scripting — machine-readable `--json` to stdout, distinct exit codes
+
+Install:
+
+```bash
+npx skills add mlava/agent-ready-skills/skills/agent-ready-cli
+```
+
 ## What is Agent Ready?
 
 [Agent Ready](https://agent-ready.dev) runs ~60 checks across four spec families:
@@ -62,12 +76,13 @@ Issue a Pro API key at <https://agent-ready.dev/dashboard/api-keys>.
 
 ## Authentication
 
-Both skills expect the API key as the environment variable **`AGENT_READY_API_KEY`** (begins with `ar_live_…`).
+All three skills expect the API key as the environment variable **`AGENT_READY_API_KEY`** (begins with `ar_live_…`).
 
 - For **`agent-ready-mcp`**, set it inside the MCP client's server config — not your shell — so the spawned `npx` process inherits it.
 - For **`agent-ready-api`**, set it in your shell, your `.env`, or wherever the agent picks up environment variables before running curl / fetch.
+- For **`agent-ready-cli`**, set it in your shell or `.env`; the CLI reads it automatically (prefer this over the `--api-key` flag, which leaks through shell history).
 
-The `ask` tool (NLWeb-style search over Agent Ready's docs) is **public** and works without a key.
+The `ask` tool/command (NLWeb-style search over Agent Ready's docs) is **public** and works without a key.
 
 ## Reference
 
@@ -78,7 +93,9 @@ The `ask` tool (NLWeb-style search over Agent Ready's docs) is **public** and wo
 - OpenAPI 3.1 spec: <https://agent-ready.dev/api/v1/openapi.json>
 - MCP server card: <https://agent-ready.dev/.well-known/mcp/server-card.json>
 - MCP server source: <https://github.com/mlava/agent-ready-mcp>
-- npm: <https://www.npmjs.com/package/agent-ready-mcp>
+- MCP npm: <https://www.npmjs.com/package/agent-ready-mcp>
+- CLI source: <https://github.com/mlava/agent-ready-cli>
+- CLI npm: <https://www.npmjs.com/package/agent-ready-scanner>
 - Auth walkthrough: <https://agent-ready.dev/auth>
 - Methodology: <https://agent-ready.dev/methodology>
 
