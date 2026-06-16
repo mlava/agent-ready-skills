@@ -43,5 +43,8 @@ jobs:
       - name: Refresh agent-ready-api
         run: npx -y skills@latest add mlava/agent-ready-skills/skills/agent-ready-api --yes
 
+      - name: Refresh agent-ready-cli
+        run: npx -y skills@latest add mlava/agent-ready-skills/skills/agent-ready-cli --yes
+
       - name: Refresh agent-ready-mcp
         run: npx -y skills@latest add mlava/agent-ready-skills/skills/agent-ready-mcp --yes
