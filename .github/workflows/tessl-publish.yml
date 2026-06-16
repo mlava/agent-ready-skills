@@ -1,0 +1,70 @@
+name: Publish skills to Tessl
+
+# Why this exists:
+# Tessl does NOT live-mirror GitHub. Skills first appeared via Tessl's auto-crawl
+# (registry/skills/github/mlava/agent-ready-skills), which we cannot manually
+# re-scan — it went stale while we iterated. Publishing through this action
+# instead links each plugin to THIS repo and supersedes the crawled listing, so
+# `main` is the single source of truth and updates are under our control.
+#
+# Versioning is deliberate, not automatic: each skill publishes at the version
+# committed in its `.tessl-plugin/plugin.json`. Bump that version in the same
+# commit when you change a skill. We do NOT pass `--bump` — in CI the bumped
+# plugin.json would not be committed back, so the registry version and the
+# committed file would drift and the next run would collide. Publishing an
+# already-published version fails on purpose: that's the signal you forgot to
+# bump.
+#
+# Only skills whose files changed in the push are published, so unrelated pushes
+# (or a bundle-file tweak in one skill) don't touch the others.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "skills/**"
+  workflow_dispatch:
+
+permissions:
+  id-token: write # OIDC handshake for the Tessl CLI
+  contents: read
+
+# A publish should finish; don't cancel one mid-flight.
+concurrency:
+  group: tessl-publish
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish changed skills to the Tessl registry
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # need history to diff against the push's base SHA
+
+      - uses: tesslio/setup-tessl@v2
+        with:
+          token: ${{ secrets.TESSL_TOKEN }}
+
+      - name: Publish changed skills
+        run: |
+          base="${{ github.event.before }}"
+          if [ -z "$base" ] || ! git cat-file -e "$base^{commit}" 2>/dev/null; then
+            base="HEAD~1"
+          fi
+          changed=$(git diff --name-only "$base" HEAD -- 'skills/')
+          echo "Changed paths:"; echo "$changed"
+          published=0
+          for dir in skills/*/; do
+            name=$(basename "$dir")
+            if echo "$changed" | grep -q "^skills/$name/"; then
+              echo "::group::Publishing $name"
+              tessl skill publish "./$dir" --public
+              echo "::endgroup::"
+              published=$((published + 1))
+            else
+              echo "Skipping $name (unchanged)"
+            fi
+          done
+          echo "Published $published skill(s)."
