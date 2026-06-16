@@ -1,6 +1,6 @@
 ---
 name: agent-ready-api
-description: Use the Agent Ready REST API to scan any public URL for AI agent-readability against the Vercel Agent Readability Spec, the llmstxt.org standard, and agent-protocol manifests (MCP server cards, A2A, agents.json, agent-permissions.json, UCP, x402, NLWeb). Activates for "scan this site for AI agent-readability", "run an Agent Ready scan on <URL>", "check the Agent Ready score for <URL>", "what's the agent-readability rating for <URL>", or any time the user wants a programmatic readability scan via HTTP. Picks this skill when the user does NOT have the Agent Ready MCP server installed — for MCP, use the `agent-ready-mcp` skill instead.
+description: Use the Agent Ready REST API to scan any public URL for AI agent-readability against the Vercel Agent Readability Spec, the llmstxt.org standard, and agent-protocol manifests (MCP server cards, A2A, agents.json, agent-permissions.json, UCP, x402, NLWeb). Activates for "scan this site for AI agent-readability", "run an Agent Ready scan on {URL}", "check the Agent Ready score for {URL}", "what's the agent-readability rating for {URL}", or any time the user wants a programmatic readability scan via HTTP. Picks this skill when the user does NOT have the Agent Ready MCP server installed — for MCP, use the `agent-ready-mcp` skill instead.
 metadata:
   author: agent-ready
   version: "1.0.0"
@@ -17,8 +17,8 @@ The Agent Ready REST API scores any public URL against ~60 checks across the Ver
 Activate this skill when the user:
 
 - Asks you to "scan https://example.com for AI agent-readability"
-- Says "run an Agent Ready scan on <URL>"
-- Asks for "the Agent Ready score for <URL>" or "the agent-readability rating for <URL>"
+- Says "run an Agent Ready scan on {URL}"
+- Asks for "the Agent Ready score for {URL}" or "the agent-readability rating for {URL}"
 - References a previous scan id (e.g. `scan_01HXYZ...`) and wants you to fetch or re-interpret it
 - Wants a prioritised list of fixes to make a site more visible to AI agents
 
