@@ -1,6 +1,6 @@
 # Agent Ready REST API — language examples
 
-The bash/curl flow in `SKILL.md` is the primary reference. These are full
+The shell flow in `SKILL.md` is the primary reference. These are full
 start-and-poll equivalents in other languages — read this file only when you
 are scripting in one of them.
 

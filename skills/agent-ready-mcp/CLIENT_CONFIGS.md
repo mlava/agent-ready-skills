@@ -87,4 +87,4 @@ This bypasses `npx`/Node entirely — useful for sandboxed environments. The ser
 
 ## Verify the install
 
-After the client restarts, the server should advertise three tools (`scan_site`, `get_scan`, `ask`) and three prompts (`scan`, `interpret_scan`, `remediation_plan`). If it doesn't show up, check the client's MCP log for the `agent-ready` entry — most issues are typos in the config path, a missing API key env var, or stale `npx` cache (`rm -rf ~/.npm/_npx` and retry).
+After the client restarts, the server should advertise three tools (`scan_site`, `get_scan`, `ask`) and three prompts (`scan`, `interpret_scan`, `remediation_plan`). If it doesn't show up, check the client's MCP log for the `agent-ready` entry — most issues are typos in the config path, a missing API key env var, or a stale `npx` cache (clear the `~/.npm/_npx` cache directory and retry).
