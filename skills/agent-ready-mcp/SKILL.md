@@ -10,7 +10,7 @@ metadata:
 
 # Agent Ready MCP server
 
-The Agent Ready MCP server exposes the ~60-check agent-readability scan as MCP tools. Install once and your agent can run scans, fetch previous results, and search the Agent Ready docs through MCP-native tool calls — no HTTP wiring required.
+The Agent Ready MCP server exposes the ~70-check agent-readability scan as MCP tools. Install once and your agent can run scans, fetch previous results, and search the Agent Ready docs through MCP-native tool calls — no HTTP wiring required.
 
 This skill covers two distinct phases:
 

@@ -10,7 +10,7 @@ metadata:
 
 # Agent Ready CLI
 
-The Agent Ready CLI (`agent-ready`, published to npm as [`agent-ready-scanner`](https://www.npmjs.com/package/agent-ready-scanner)) scores any public URL against ~60 checks across the Vercel Agent Readability Spec, the llmstxt.org standard, and the agent-protocol manifests (MCP server cards, A2A, agents.json, agent-permissions.json, UCP, x402, NLWeb). It's a thin zero-dependency wrapper over the hosted [agent-ready.dev REST API](https://agent-ready.dev/api/v1/openapi.json) — no scanning happens locally.
+The Agent Ready CLI (`agent-ready`, published to npm as [`agent-ready-scanner`](https://www.npmjs.com/package/agent-ready-scanner)) scores any public URL against ~70 checks across the Vercel Agent Readability Spec, the llmstxt.org standard, and the agent-protocol manifests (MCP server cards, A2A, agents.json, agent-permissions.json, UCP, x402, NLWeb). It's a thin zero-dependency wrapper over the hosted [agent-ready.dev REST API](https://agent-ready.dev/api/v1/openapi.json) — no scanning happens locally.
 
 Use this skill when you can run shell commands and want the fewest moving parts: one command starts a scan, polls to completion, and prints a summary — no HTTP wiring, no MCP client config. It's also the right fit for scripting, because it emits machine-readable JSON to stdout and uses distinct exit codes.
 

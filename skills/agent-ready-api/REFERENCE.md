@@ -21,5 +21,5 @@ recovery live in `SKILL.md`.
 - Auth walkthrough (WorkOS `auth.md` aligned): https://agent-ready.dev/auth
 - Dashboard (issue keys): https://agent-ready.dev/dashboard/api-keys
 - Pricing: https://agent-ready.dev/pricing
-- Methodology (all 60 checks): https://agent-ready.dev/methodology
+- Methodology (~70 checks): https://agent-ready.dev/methodology
 - Discovery hints: `https://agent-ready.dev/.well-known/oauth-protected-resource`, `https://agent-ready.dev/.well-known/mcp/server-card.json`

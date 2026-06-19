@@ -17,5 +17,5 @@ in `SKILL.md`. Per-client install snippets live in `CLIENT_CONFIGS.md`.
 - MCP server card: https://agent-ready.dev/.well-known/mcp/server-card.json
 - API quickstart: https://agent-ready.dev/quickstart
 - Auth walkthrough: https://agent-ready.dev/auth
-- Methodology (all 60 checks): https://agent-ready.dev/methodology
+- Methodology (~70 checks): https://agent-ready.dev/methodology
 - Dashboard (issue keys): https://agent-ready.dev/dashboard/api-keys

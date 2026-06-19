@@ -10,7 +10,7 @@ metadata:
 
 # Agent Ready REST API
 
-The Agent Ready REST API scores any public URL against ~60 checks across the Vercel Agent Readability Spec, the llmstxt.org standard, and the agent-protocol manifests (MCP server cards, A2A agent cards, agents.json, agent-permissions.json, UCP, x402, NLWeb). Use this skill when the user wants to run a scan programmatically without setting up an MCP server — start a scan, poll for results, summarise the highest-impact findings.
+The Agent Ready REST API scores any public URL against ~70 checks across the Vercel Agent Readability Spec, the llmstxt.org standard, and the agent-protocol manifests (MCP server cards, A2A agent cards, agents.json, agent-permissions.json, UCP, x402, NLWeb). Use this skill when the user wants to run a scan programmatically without setting up an MCP server — start a scan, poll for results, summarise the highest-impact findings.
 
 ## When to use
 
