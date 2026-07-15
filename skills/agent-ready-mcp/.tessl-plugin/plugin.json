@@ -1,8 +1,8 @@
 {
   "name": "mlava/agent-ready-mcp",
-  "description": "Install and use the Agent Ready MCP server to scan any URL for AI agent-readability via MCP tool calls. Activates for \"install agent-ready mcp\", \"set up agent-ready in Claude Desktop / Cursor / Cline / Goose / Continue\", \"add agent-ready as an MCP tool\", \"scan this site via agent-ready\", \"run scan_site / get_scan / ask via MCP\". Pick this skill when the user wants tool-native access to Agent Ready — no curl, no fetch wiring. For direct REST access without MCP, use the `agent-ready-api` skill instead.",
+  "description": "Install and use the Agent Ready (agent-ready.dev) MCP server to scan any URL for AI agent-readability via MCP tool calls. Activates for \"install agent-ready mcp\", \"set up agent-ready in Claude Desktop / Cursor / Cline / Goose / Continue\", \"add agent-ready as an MCP tool\", \"scan this site via agent-ready\", \"run scan_site / get_scan / ask via MCP\". Pick this skill when the user wants tool-native access to Agent Ready — no curl, no fetch wiring. For direct REST access without MCP, use the `agent-ready-api` skill instead.",
   "skills": [
     "."
   ],
-  "version": "0.2.2"
+  "version": "0.2.3"
 }

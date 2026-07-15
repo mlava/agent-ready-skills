@@ -1,16 +1,16 @@
 ---
 name: agent-ready-mcp
-description: Install and use the Agent Ready MCP server to scan any URL for AI agent-readability via MCP tool calls. Activates for "install agent-ready mcp", "set up agent-ready in Claude Desktop / Cursor / Cline / Goose / Continue", "add agent-ready as an MCP tool", "scan this site via agent-ready", "run scan_site / get_scan / ask via MCP". Pick this skill when the user wants tool-native access to Agent Ready — no curl, no fetch wiring. For direct REST access without MCP, use the `agent-ready-api` skill instead.
+description: Install and use the Agent Ready (agent-ready.dev) MCP server to scan any URL for AI agent-readability via MCP tool calls. Activates for "install agent-ready mcp", "set up agent-ready in Claude Desktop / Cursor / Cline / Goose / Continue", "add agent-ready as an MCP tool", "scan this site via agent-ready", "run scan_site / get_scan / ask via MCP". Pick this skill when the user wants tool-native access to Agent Ready — no curl, no fetch wiring. For direct REST access without MCP, use the `agent-ready-api` skill instead.
 metadata:
   author: agent-ready
-  version: "1.0.1"
+  version: "1.0.2"
   homepage: https://agent-ready.dev
   source: https://github.com/mlava/agent-ready-skills
 ---
 
 # Agent Ready MCP server
 
-The Agent Ready MCP server exposes the ~70-check agent-readability scan as MCP tools. Install once and your agent can run scans, fetch previous results, and search the Agent Ready docs through MCP-native tool calls — no HTTP wiring required.
+The Agent Ready (agent-ready.dev) MCP server exposes the ~70-check agent-readability scan as MCP tools. Install once and your agent can run scans, fetch previous results, and search the Agent Ready docs through MCP-native tool calls — no HTTP wiring required.
 
 This skill covers two distinct phases:
 

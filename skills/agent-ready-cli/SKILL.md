@@ -1,9 +1,9 @@
 ---
 name: agent-ready-cli
-description: Use the Agent Ready command-line client to scan any public URL for AI agent-readability against the Vercel Agent Readability Spec, the llmstxt.org standard, and agent-protocol manifests (MCP server cards, A2A, agents.json, agent-permissions.json, UCP, x402, NLWeb). Activates for "scan this site with the agent-ready CLI", "run agent-ready scan {URL} in the terminal", "agent-ready get {id}", "agent-ready list", "agent-ready ask {question}", or any time the user wants a one-command terminal scan with no fetch wiring and no MCP install. Pick this skill when the agent can run shell commands. For raw HTTP, use the `agent-ready-api` skill; for MCP-native tool calls, use `agent-ready-mcp`.
+description: Use the Agent Ready (agent-ready.dev) command-line client to scan any public URL for AI agent-readability against the Vercel Agent Readability Spec, the llmstxt.org standard, and agent-protocol manifests (MCP server cards, A2A, agents.json, agent-permissions.json, UCP, x402, NLWeb). Activates for "scan this site with the agent-ready CLI", "run agent-ready scan {URL} in the terminal", "agent-ready get {id}", "agent-ready list", "agent-ready ask {question}", or any time the user wants a one-command terminal scan with no fetch wiring and no MCP install. Pick this skill when the agent can run shell commands. For raw HTTP, use the `agent-ready-api` skill; for MCP-native tool calls, use `agent-ready-mcp`.
 metadata:
   author: agent-ready
-  version: "1.0.1"
+  version: "1.0.2"
   homepage: https://agent-ready.dev
   source: https://github.com/mlava/agent-ready-skills
 ---
