@@ -8,7 +8,8 @@ in `SKILL.md`. Per-client install snippets live in `CLIENT_CONFIGS.md`.
 - **S1–S15** — site-wide (llms.txt, robots.txt, sitemaps, AGENTS.md, HTTPS, OpenAPI)
 - **P1–P23** — per-page (meta tags, JSON-LD, headings, markdown mirrors, content negotiation, code-block language, JS-rendering dependency)
 - **L1–L10** — llmstxt.org compliance
-- **C1–C12** — protocol manifests (MCP server cards, A2A, agents.json, agent-permissions.json, UCP, x402, NLWeb)
+- **C1–C21** — protocol manifests (MCP server cards, A2A, agents.json, agent-permissions.json, UCP, x402, NLWeb, API Catalog, Web Bot Auth, Agent Skills Discovery, A2UI, MPP, AP2, ACP)
+- **A1–A9** — accessibility (WCAG 2.2 / layout stability), scored as a separate accessibility sub-score
 
 ## Discovery and reference URLs
 

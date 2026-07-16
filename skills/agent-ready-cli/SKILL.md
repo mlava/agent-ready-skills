@@ -3,14 +3,14 @@ name: agent-ready-cli
 description: Use the Agent Ready (agent-ready.dev) command-line client to scan any public URL for AI agent-readability against the Vercel Agent Readability Spec, the llmstxt.org standard, and agent-protocol manifests (MCP server cards, A2A, agents.json, agent-permissions.json, UCP, x402, NLWeb). Activates for "scan this site with the agent-ready CLI", "run agent-ready scan {URL} in the terminal", "agent-ready get {id}", "agent-ready list", "agent-ready ask {question}", or any time the user wants a one-command terminal scan with no fetch wiring and no MCP install. Pick this skill when the agent can run shell commands. For raw HTTP, use the `agent-ready-api` skill; for MCP-native tool calls, use `agent-ready-mcp`.
 metadata:
   author: agent-ready
-  version: "1.0.2"
+  version: "1.0.3"
   homepage: https://agent-ready.dev
   source: https://github.com/mlava/agent-ready-skills
 ---
 
 # Agent Ready CLI
 
-The Agent Ready CLI (`agent-ready`, published to npm as [`agent-ready-scanner`](https://www.npmjs.com/package/agent-ready-scanner)) scores any public URL against ~70 checks across the Vercel Agent Readability Spec, the llmstxt.org standard, and the agent-protocol manifests (MCP server cards, A2A, agents.json, agent-permissions.json, UCP, x402, NLWeb). It's a thin zero-dependency wrapper over the hosted [agent-ready.dev REST API](https://agent-ready.dev/api/v1/openapi.json) — no scanning happens locally.
+The Agent Ready CLI (`agent-ready`, published to npm as [`agent-ready-scanner`](https://www.npmjs.com/package/agent-ready-scanner)) scores any public URL against ~70 checks across the Vercel Agent Readability Spec, the llmstxt.org standard, and the agent-protocol manifests (MCP server cards, A2A, agents.json, agent-permissions.json, UCP, x402, NLWeb), plus a separate 9-check accessibility sub-score (WCAG 2.2 / layout stability). It's a thin zero-dependency wrapper over the hosted [agent-ready.dev REST API](https://agent-ready.dev/api/v1/openapi.json) — no scanning happens locally.
 
 Use this skill when you can run shell commands and want the fewest moving parts: one command starts a scan, polls to completion, and prints a summary — no HTTP wiring, no MCP client config. It's also the right fit for scripting, because it emits machine-readable JSON to stdout and uses distinct exit codes.
 
@@ -77,7 +77,7 @@ Direct the user to <https://agent-ready.dev/dashboard/api-keys> to issue a key (
 agent-ready scan https://example.com
 ```
 
-This starts the scan, polls until it completes (typically 15–60 s), and prints a formatted readability summary — score, rating band, llms.txt sub-score, and the highest-impact failing checks.
+This starts the scan, polls until it completes (typically 15–60 s), and prints a formatted readability summary — score, rating band, llms.txt sub-score, accessibility sub-score (when present), and the highest-impact failing checks.
 
 Pass the URL verbatim, including scheme, path, and trailing slash. The server normalises internally and rejects private / reserved IPs at the network layer; bad input surfaces as a clear usage or `invalid_request` error.
 
@@ -133,11 +133,11 @@ agent-ready ask "summarize the llms.txt requirements" --mode summarize
 The default (non-`--json`) output is already a human summary — relay it. If you used `--json`, lead with:
 
 1. **Overall score** (0–100) and its **rating band** — `excellent` (90–100), `good` (70–89), `fair` (50–69), `needs_improvement` (0–49).
-2. **llms.txt sub-score** if the site has an `llms.txt`.
+2. **llms.txt sub-score** if the site has an `llms.txt`, and the **accessibility sub-score** (`accessibilityScore`, 0–100 or `null` — a separate WCAG 2.2 / layout-stability score).
 3. **Top 3–5 highest-impact failing checks** (`status: "fail"`). Each has `name`, `message`, and `howToFix` — surface those, not the raw JSON.
 4. **One-line next step** — point at the `shareUrl` for the full breakdown, or offer to draft a remediation plan.
 
-Check categories: **S1–S15** site-wide · **P1–P23** per-page · **L1–L10** llmstxt.org · **C1–C12** protocol manifests.
+Check categories: **S1–S15** site-wide · **P1–P23** per-page · **L1–L10** llmstxt.org · **C1–C21** protocol manifests · **A1–A9** accessibility.
 
 ## Security & trust
 

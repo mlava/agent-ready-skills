@@ -65,6 +65,8 @@ npx skills add mlava/agent-ready-skills/skills/agent-ready-cli
 - **Agent protocols** — MCP server cards (SEP-1649), A2A agent cards, agents.json, agent-permissions.json, UCP, x402, NLWeb
 - **Authentication discovery** — RFC 9728 PRM + RFC 8414 AS metadata, WorkOS `auth.md`
 
+Plus a separate **accessibility sub-score** — 9 WCAG 2.2 / layout-stability checks over the homepage (image text alternatives, form labels, control names, ARIA references, iframe titles, heading order, tab order, zoom, media dimensions), reported on its own and not folded into the readability score.
+
 Pricing:
 
 | Plan | Price | Pages/scan | Scans | API access |

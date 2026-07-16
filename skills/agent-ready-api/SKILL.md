@@ -3,14 +3,14 @@ name: agent-ready-api
 description: Use the Agent Ready (agent-ready.dev) REST API to scan any public URL for AI agent-readability against the Vercel Agent Readability Spec, the llmstxt.org standard, and agent-protocol manifests (MCP server cards, A2A, agents.json, agent-permissions.json, UCP, x402, NLWeb). Activates for "scan this site for AI agent-readability", "run an Agent Ready scan on {URL}", "check the Agent Ready score for {URL}", "what's the agent-readability rating for {URL}", or any time the user wants a programmatic readability scan via HTTP. Picks this skill when the user does NOT have the Agent Ready MCP server installed — for MCP, use the `agent-ready-mcp` skill instead.
 metadata:
   author: agent-ready
-  version: "1.0.2"
+  version: "1.0.3"
   homepage: https://agent-ready.dev
   source: https://github.com/mlava/agent-ready-skills
 ---
 
 # Agent Ready REST API
 
-The Agent Ready (agent-ready.dev) REST API scores any public URL against ~70 checks across the Vercel Agent Readability Spec, the llmstxt.org standard, and the agent-protocol manifests (MCP server cards, A2A agent cards, agents.json, agent-permissions.json, UCP, x402, NLWeb). Use this skill when the user wants to run a scan programmatically without setting up an MCP server — start a scan, poll for results, summarise the highest-impact findings.
+The Agent Ready (agent-ready.dev) REST API scores any public URL against ~70 checks across the Vercel Agent Readability Spec, the llmstxt.org standard, and the agent-protocol manifests (MCP server cards, A2A agent cards, agents.json, agent-permissions.json, UCP, x402, NLWeb), plus a separate 9-check accessibility sub-score (WCAG 2.2 / layout stability). Use this skill when the user wants to run a scan programmatically without setting up an MCP server — start a scan, poll for results, summarise the highest-impact findings.
 
 ## When to use
 
@@ -110,7 +110,7 @@ For full **Node / TypeScript** and **Python** start-and-poll equivalents, see [E
 The complete scan response is large (50+ checks). Don't dump raw JSON to the user. Lead with:
 
 1. **Overall score** (0–100) and its **rating band** — `excellent` (90–100), `good` (70–89), `fair` (50–69), `needs_improvement` (0–49). Use `result.score` and `result.rating`.
-2. **llms.txt sub-score** if the site has an `llms.txt` (`result.llmstxtScore`).
+2. **llms.txt sub-score** if the site has an `llms.txt` (`result.llmstxtScore`), and the **accessibility sub-score** (`result.accessibilityScore`, 0–100 or `null` — a separate WCAG 2.2 / layout-stability score, not part of the overall score).
 3. **Top 3–5 highest-impact failing checks.** Look across `result.siteChecks`, `result.pageResults[].pageChecks`, `result.protocolResults`, `result.llmstxtChecks` for `status === "fail"`. Each check entry has `name`, `message`, and `howToFix` — surface those.
 4. **One-line next step.** Point the user at `result.shareUrl` for the full breakdown, or offer to draft a remediation plan from the failing checks.
 
@@ -124,9 +124,10 @@ Common response fields:
 | `rating` | `excellent` / `good` / `fair` / `needs_improvement` |
 | `vercelScore` | Vercel Agent Readability Spec sub-score |
 | `llmstxtScore` | llmstxt.org compliance sub-score |
+| `accessibilityScore` | Accessibility sub-score (A-series WCAG checks); 0–100 or `null` |
 | `siteChecks` | Site-wide check results (S1–S15) |
 | `pageResults` | Per-page check results (P1–P23) |
-| `protocolResults` | Protocol manifest check results (C1–C12) |
+| `protocolResults` | Protocol manifest check results (C1–C21); also carries the accessibility checks (A1–A9) |
 | `llmstxtChecks` | llms.txt check results (L1–L10) |
 | `pagesScanned` | Pages actually crawled |
 | `pagesDiscovered` | Pages found via sitemap/discovery |

@@ -3,14 +3,14 @@ name: agent-ready-mcp
 description: Install and use the Agent Ready (agent-ready.dev) MCP server to scan any URL for AI agent-readability via MCP tool calls. Activates for "install agent-ready mcp", "set up agent-ready in Claude Desktop / Cursor / Cline / Goose / Continue", "add agent-ready as an MCP tool", "scan this site via agent-ready", "run scan_site / get_scan / ask via MCP". Pick this skill when the user wants tool-native access to Agent Ready — no curl, no fetch wiring. For direct REST access without MCP, use the `agent-ready-api` skill instead.
 metadata:
   author: agent-ready
-  version: "1.0.2"
+  version: "1.0.3"
   homepage: https://agent-ready.dev
   source: https://github.com/mlava/agent-ready-skills
 ---
 
 # Agent Ready MCP server
 
-The Agent Ready (agent-ready.dev) MCP server exposes the ~70-check agent-readability scan as MCP tools. Install once and your agent can run scans, fetch previous results, and search the Agent Ready docs through MCP-native tool calls — no HTTP wiring required.
+The Agent Ready (agent-ready.dev) MCP server exposes the ~70-check agent-readability scan (plus a separate 9-check accessibility sub-score) as MCP tools. Install once and your agent can run scans, fetch previous results, and search the Agent Ready docs through MCP-native tool calls — no HTTP wiring required.
 
 This skill covers two distinct phases:
 
@@ -95,14 +95,14 @@ Tell the user the scan is in progress, surface the id, and offer to call `get_sc
 
 ## Step 6: Summarise findings, don't dump raw JSON
 
-The completed result has 50+ check entries across four categories. Lead with:
+The completed result has 50+ check entries across five categories. Lead with:
 
 1. **Overall agent-readability score** (0–100) and rating band (Excellent / Good / Fair / Needs Improvement)
-2. **llms.txt sub-score** if the site has an `llms.txt`
+2. **llms.txt sub-score** if the site has an `llms.txt`, and the **accessibility sub-score** (`accessibilityScore`, 0–100 or `null` — a separate WCAG 2.2 / layout-stability score)
 3. **Top 3–5 highest-impact failing checks** (`status: "fail"` in `details`). Each check has `name`, `message`, and `howToFix` — surface those, not the raw JSON.
 4. **One-line next step** — point at `shareUrl` for the full breakdown, or offer to invoke `remediation_plan` for a structured fix-it doc.
 
-Check categories (S1–S15 site-wide, P1–P23 per-page, L1–L10 llmstxt.org, C1–C12 protocol manifests) are listed in [REFERENCE.md](REFERENCE.md).
+Check categories (S1–S15 site-wide, P1–P23 per-page, L1–L10 llmstxt.org, C1–C21 protocol manifests, A1–A9 accessibility) are listed in [REFERENCE.md](REFERENCE.md).
 
 ## Errors and recovery
 
