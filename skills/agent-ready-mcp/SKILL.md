@@ -3,7 +3,7 @@ name: agent-ready-mcp
 description: Install and use the Agent Ready (agent-ready.dev) MCP server to scan any URL for AI agent-readability via MCP tool calls. Activates for "install agent-ready mcp", "set up agent-ready in Claude Desktop / Cursor / Cline / Goose / Continue", "add agent-ready as an MCP tool", "scan this site via agent-ready", "run scan_site / get_scan / ask via MCP". Pick this skill when the user wants tool-native access to Agent Ready — no curl, no fetch wiring. For direct REST access without MCP, use the `agent-ready-api` skill instead.
 metadata:
   author: agent-ready
-  version: "1.0.3"
+  version: "1.1.0"
   homepage: https://agent-ready.dev
   source: https://github.com/mlava/agent-ready-skills
 ---
@@ -19,11 +19,11 @@ This skill covers two distinct phases:
 
 The server is published to npm as [`agent-ready-mcp`](https://www.npmjs.com/package/agent-ready-mcp); source at https://github.com/mlava/agent-ready-mcp. If the user has no MCP client and just wants REST calls (curl / fetch / requests), use the **`agent-ready-api`** skill instead.
 
-## Step 1: Get an API key
+## Step 1: Get an API key (optional for `scan_site`)
 
-Agent Ready API access requires a **Pro account**. Issue a key at <https://agent-ready.dev/dashboard/api-keys> (sign up at <https://agent-ready.dev/pricing> if needed). Keys begin with `ar_live_…`.
+`scan_site` works with no key at all, on the free anonymous tier (3 scans per 30 days per IP, 25-page depth) — you can skip straight to Step 2 and omit the `env` block. `ask` is always **public** too, no key needed.
 
-The `ask` MCP tool is **public** and works without a key — it queries Agent Ready's own docs. The other tools (`scan_site`, `get_scan`) require the key.
+`get_scan` always needs a **Pro account** key — scan history is account-scoped, so there's no anonymous equivalent. A Pro key also unlocks deeper `scan_site` runs (250 pages) and higher volume. Issue one at <https://agent-ready.dev/dashboard/api-keys> (sign up at <https://agent-ready.dev/pricing> if needed). Keys begin with `ar_live_…`.
 
 ## Step 2: Install the server
 
@@ -48,6 +48,8 @@ The most common client is **Claude Desktop**. Edit its config file:
 }
 ```
 
+The `env` block is optional — omit it entirely to run keyless (`scan_site` and `ask` still work; `get_scan` will error until a key is added later).
+
 Quit and reopen Claude Desktop. After restart it should advertise three tools
 (`scan_site`, `get_scan`, `ask`) and three prompts (`scan`, `interpret_scan`,
 `remediation_plan`).
@@ -60,8 +62,8 @@ streamable-HTTP transport (no npm) — plus install troubleshooting: see
 
 | Tool | Use when |
 |---|---|
-| **`scan_site`** | User wants a **fresh scan** of a URL. Takes `url` (required) and optional `pageLimit`. |
-| **`get_scan`** | User references an **existing scan id** (e.g. `scan_01HXYZ...`) or asks you to re-fetch a previous scan. |
+| **`scan_site`** | User wants a **fresh scan** of a URL. Takes `url` (required) and optional `pageLimit`. **Works without a key** (anonymous free tier, capped at 25 pages); a Pro key unlocks up to 250. |
+| **`get_scan`** | User references an **existing scan id** (e.g. `scan_01HXYZ...`) or asks you to re-fetch a previous scan. **Needs a Pro key** — scan history is account-scoped, so anonymous `scan_site` calls have no id to look up later (their full result is already in the response). |
 | **`ask`** | User asks a **definitional** question about a check, spec, or term ("what is `llms.txt`?", "explain check L8") — no URL involved. **No API key required.** |
 
 For end-to-end workflows that combine these, prefer the **prompts** the server already wires up — don't reconstruct the workflow with raw tool calls:
@@ -106,9 +108,11 @@ Check categories (S1–S15 site-wide, P1–P23 per-page, L1–L10 llmstxt.org, C
 
 ## Errors and recovery
 
-- **`unauthorized` / 401** — `AGENT_READY_API_KEY` missing or invalid. Verify the env var is set in the MCP client config (not just your shell).
+- **`missing_api_key`** — from `get_scan` with no key set. Explain that scan history needs a Pro key; `scan_site` works keylessly and already returned its full result inline, so there may be nothing to fetch.
+- **`unauthorized` / 401** — `AGENT_READY_API_KEY` set but invalid. Verify the env var is set correctly in the MCP client config (not just your shell).
 - **`subscription_required` / 403** — key valid but the account is on the Free tier. Send the user to <https://agent-ready.dev/pricing>.
-- **`rate_limited` / 429** — 10 req/min, 200 req/day per key. The response carries `Retry-After`.
+- **`quota_exhausted` / 429 (keyless `scan_site`)** — the anonymous per-IP tier (3 scans/30 days) is used up. The message carries a reset date; send the user to <https://agent-ready.dev/dashboard/api-keys> for a Pro key, or they can wait for the reset.
+- **`rate_limited` / 429 (authenticated)** — 10 req/min, 200 req/day per key. The response carries `Retry-After`.
 - **`invalid_request` / 400** — usually a malformed URL. The error message names the offending field.
 
 ## Security & trust
