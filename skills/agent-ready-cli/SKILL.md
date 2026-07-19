@@ -3,7 +3,7 @@ name: agent-ready-cli
 description: Use the Agent Ready (agent-ready.dev) command-line client to scan any public URL for AI agent-readability against the Vercel Agent Readability Spec, the llmstxt.org standard, and agent-protocol manifests (MCP server cards, A2A, agents.json, agent-permissions.json, UCP, x402, NLWeb). Activates for "scan this site with the agent-ready CLI", "run agent-ready scan {URL} in the terminal", "agent-ready get {id}", "agent-ready list", "agent-ready ask {question}", or any time the user wants a one-command terminal scan with no fetch wiring and no MCP install. Pick this skill when the agent can run shell commands. For raw HTTP, use the `agent-ready-api` skill; for MCP-native tool calls, use `agent-ready-mcp`.
 metadata:
   author: agent-ready
-  version: "1.0.3"
+  version: "1.1.0"
   homepage: https://agent-ready.dev
   source: https://github.com/mlava/agent-ready-skills
 ---
@@ -37,11 +37,11 @@ agent-ready --version
 
 Throughout this skill, `agent-ready <cmd>` means the installed command; substitute `npx agent-ready-scanner <cmd>` if it isn't installed globally.
 
-## Step 2: Locate the API key
+## Step 2: Locate the API key (optional for `scan`)
 
-`scan`, `get`, and `list` require a **Pro API key** (keys start with `ar_live_`). `ask` is **public** — skip to Step 6 if that's all the user needs.
+`scan` works without a key on the free anonymous tier (3 scans per 30 days per IP, 25-page depth) — skip to Step 3 if that's all the user needs. `get` and `list` always need a **Pro API key** (keys start with `ar_live_`), since scan history is account-scoped; a Pro key also unlocks deeper `scan` runs (250 pages) and higher volume. `ask` is always **public**.
 
-Work through these in order:
+If the user wants Pro features, work through these in order:
 
 ### A) `AGENT_READY_API_KEY` is already set
 
@@ -98,6 +98,8 @@ agent-ready scan https://example.com --json | jq '.score'
 ```
 
 When you use `--no-wait`, capture the printed scan id and fetch it later with `get` (Step 4).
+
+**No key set:** `scan` runs synchronously on the anonymous tier instead — `--page-limit` is ignored (fixed 25 pages; the CLI prints a warning to stderr and continues), and `--no-wait` errors (anonymous scans have no queue to poll later, so there's nothing to fetch with `get`). The formatted output ends with a one-line footer pointing at Pro for depth, history, and monitoring. On `quota_exhausted` (429, anonymous quota used up), the CLI prints the reset date and points at `/dashboard/api-keys`.
 
 ## Step 4: Fetch a scan by id
 

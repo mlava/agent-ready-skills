@@ -19,7 +19,7 @@ Occasional-lookup material. The scan/get/list/ask workflow lives in `SKILL.md`.
 
 | Variable | Default | Purpose |
 |---|---|---|
-| `AGENT_READY_API_KEY` | — | Pro API key for `scan` / `get` / `list` |
+| `AGENT_READY_API_KEY` | — | Pro API key — required for `get` / `list`, optional for `scan` (keyless runs the anonymous free tier) |
 | `AGENT_READY_API_URL` | `https://agent-ready.dev` | API base URL |
 | `AGENT_READY_SCAN_TIMEOUT_MS` | `120000` | Overall scan wait budget |
 | `AGENT_READY_GET_TIMEOUT_MS` | `10000` | Per-request timeout |
