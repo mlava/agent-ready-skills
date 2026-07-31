@@ -3,7 +3,7 @@ name: agent-ready-api
 description: Use the Agent Ready (agent-ready.dev) REST API to scan any public URL for AI agent-readability against the Vercel Agent Readability Spec, the llmstxt.org standard, and agent-protocol manifests (MCP server cards, A2A, agents.json, agent-permissions.json, UCP, x402, NLWeb). Activates for "scan this site for AI agent-readability", "run an Agent Ready scan on {URL}", "check the Agent Ready score for {URL}", "what's the agent-readability rating for {URL}", or any time the user wants a programmatic readability scan via HTTP. Picks this skill when the user does NOT have the Agent Ready MCP server installed — for MCP, use the `agent-ready-mcp` skill instead.
 metadata:
   author: agent-ready
-  version: "1.0.3"
+  version: "1.0.4"
   homepage: https://agent-ready.dev
   source: https://github.com/mlava/agent-ready-skills
 ---
@@ -127,7 +127,7 @@ Common response fields:
 | `accessibilityScore` | Accessibility sub-score (A-series WCAG checks); 0–100 or `null` |
 | `siteChecks` | Site-wide check results (S1–S15) |
 | `pageResults` | Per-page check results (P1–P23) |
-| `protocolResults` | Protocol manifest check results (C1–C21); also carries the accessibility checks (A1–A9) |
+| `protocolResults` | Protocol manifest check results (C1–C21); also carries the accessibility checks (A1–A23). A result with `details.notApplicable` had nothing to grade and is excluded from `accessibilityScore` |
 | `llmstxtChecks` | llms.txt check results (L1–L10) |
 | `pagesScanned` | Pages actually crawled |
 | `pagesDiscovered` | Pages found via sitemap/discovery |
