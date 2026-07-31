@@ -163,3 +163,5 @@ Check categories: **S1–S15** site-wide · **P1–P23** per-page · **L1–L10*
 ## Reference
 
 Global options, environment variables, exit codes, and reference URLs: see [REFERENCE.md](REFERENCE.md).
+
+<!-- CI self-check: deliberate body edit with no version bump. This branch is not for merge. -->
