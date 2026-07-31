@@ -1,0 +1,39 @@
+name: Skill version guard
+
+# Why this exists:
+# Twice now a skill change has merged without its Tessl version bumped (#3, #5),
+# each time discovered only when the publish job failed on main — after the
+# change was already in. The publish workflow refuses `--bump` on purpose (see
+# its header: the bumped plugin.json would not be committed back, so the
+# registry and the repo would drift), which makes "publishing an existing
+# version fails" the intended signal. This just moves that signal earlier, to
+# the pull request, where it costs a re-push instead of a follow-up PR.
+#
+# It also covers the failure nothing else catches: forgetting the SKILL.md
+# metadata.version. That one breaks no build at all — the Tessl publish
+# succeeds and skills.sh installs quietly keep serving the previous copy.
+#
+# A version-only change (bumping plugin.json to unblock a publish, with no edit
+# to the skill itself) is deliberately allowed through, or the fix for a missed
+# bump would itself demand another bump.
+
+on:
+  pull_request:
+    paths:
+      - "skills/**"
+
+permissions:
+  contents: read
+
+jobs:
+  versions-bumped:
+    name: Changed skills bumped their versions
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Full history so the script can read files at the base commit.
+          fetch-depth: 0
+
+      - name: Check changed skills bumped their versions
+        run: python3 scripts/check-skill-versions.py "${{ github.event.pull_request.base.sha }}"
