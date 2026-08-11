@@ -3,14 +3,14 @@ name: agent-ready-cli
 description: Use the Agent Ready (agent-ready.dev) command-line client to scan any public URL for AI agent-readability against the Vercel Agent Readability Spec, the llmstxt.org standard, and agent-protocol manifests (MCP server cards, A2A, agents.json, agent-permissions.json, UCP, x402, NLWeb). Activates for "scan this site with the agent-ready CLI", "run agent-ready scan {URL} in the terminal", "agent-ready get {id}", "agent-ready list", "agent-ready ask {question}", or any time the user wants a one-command terminal scan with no fetch wiring and no MCP install. Pick this skill when the agent can run shell commands. For raw HTTP, use the `agent-ready-api` skill; for MCP-native tool calls, use `agent-ready-mcp`.
 metadata:
   author: agent-ready
-  version: "1.1.1"
+  version: "1.1.2"
   homepage: https://agent-ready.dev
   source: https://github.com/mlava/agent-ready-skills
 ---
 
 # Agent Ready CLI
 
-The Agent Ready CLI (`agent-ready`, published to npm as [`agent-ready-scanner`](https://www.npmjs.com/package/agent-ready-scanner)) scores any public URL against ~70 checks across the Vercel Agent Readability Spec, the llmstxt.org standard, and the agent-protocol manifests (MCP server cards, A2A, agents.json, agent-permissions.json, UCP, x402, NLWeb), plus a separate 9-check accessibility sub-score (WCAG 2.2 / layout stability). It's a thin zero-dependency wrapper over the hosted [agent-ready.dev REST API](https://agent-ready.dev/api/v1/openapi.json) — no scanning happens locally.
+The Agent Ready CLI (`agent-ready`, published to npm as [`agent-ready-scanner`](https://www.npmjs.com/package/agent-ready-scanner)) scores any public URL against ~70 checks across the Vercel Agent Readability Spec, the llmstxt.org standard, and the agent-protocol manifests (MCP server cards, A2A, agents.json, agent-permissions.json, UCP, x402, NLWeb), plus a separate 23-check accessibility sub-score (WCAG 2.2 / layout stability). It's a thin zero-dependency wrapper over the hosted [agent-ready.dev REST API](https://agent-ready.dev/api/v1/openapi.json) — no scanning happens locally.
 
 Use this skill when you can run shell commands and want the fewest moving parts: one command starts a scan, polls to completion, and prints a summary — no HTTP wiring, no MCP client config. It's also the right fit for scripting, because it emits machine-readable JSON to stdout and uses distinct exit codes.
 
@@ -94,7 +94,7 @@ Useful options:
 ```bash
 agent-ready scan https://example.com --page-limit 25
 agent-ready scan https://example.com --no-wait      # queue only, prints the id
-agent-ready scan https://example.com --json | jq '.score'
+agent-ready scan https://example.com --json | jq '.vercelScore'
 ```
 
 When you use `--no-wait`, capture the printed scan id and fetch it later with `get` (Step 4).
@@ -139,7 +139,7 @@ The default (non-`--json`) output is already a human summary — relay it. If yo
 3. **Top 3–5 highest-impact failing checks** (`status: "fail"`). Each has `name`, `message`, and `howToFix` — surface those, not the raw JSON.
 4. **One-line next step** — point at the `shareUrl` for the full breakdown, or offer to draft a remediation plan.
 
-Check categories: **S1–S15** site-wide · **P1–P23** per-page · **L1–L10** llmstxt.org · **C1–C21** protocol manifests · **A1–A23** accessibility.
+Check categories: **S1–S15** site-wide · **P1–P23** per-page · **L1–L10** llmstxt.org · **C1–C22** protocol manifests · **A1–A23** accessibility.
 
 ## Security & trust
 

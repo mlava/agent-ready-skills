@@ -19,15 +19,24 @@ const start = await fetch(`${base}/scans`, {
   body: JSON.stringify({ url: "https://example.com" }),
 }).then((r) => r.json());
 
+// Terminal states are "completed" and "failed" — loop while it is "running",
+// never until it equals "completed", or a failed scan spins forever.
 let result = start;
-while (result.status !== "complete") {
+while (result.status === "running") {
   await new Promise((r) => setTimeout(r, 2_000));
   result = await fetch(`${base}/scans/${start.id}`, {
     headers: { Authorization: `Bearer ${KEY}` },
   }).then((r) => r.json());
 }
+if (result.status !== "completed") {
+  throw new Error(`Scan ${result.status}: the site could not be read`);
+}
 
-console.log("Score:", result.score, result.shareUrl);
+console.log(
+  "Score:",
+  result.vercelScore,
+  `https://agent-ready.dev/scan/${result.shareToken}`,
+);
 ```
 
 ## Python
@@ -45,10 +54,19 @@ start = requests.post(
     json={"url": "https://example.com"},
 ).json()
 
+# Terminal states are "completed" and "failed" — loop while it is "running",
+# never until it equals "completed", or a failed scan spins forever.
 result = start
-while result["status"] != "complete":
+while result["status"] == "running":
     time.sleep(2)
     result = requests.get(f"{base}/scans/{start['id']}", headers=h).json()
 
-print("Score:", result["score"], result["shareUrl"])
+if result["status"] != "completed":
+    raise SystemExit(f"Scan {result['status']}: the site could not be read")
+
+print(
+    "Score:",
+    result["vercelScore"],
+    f"https://agent-ready.dev/scan/{result['shareToken']}",
+)
 ```

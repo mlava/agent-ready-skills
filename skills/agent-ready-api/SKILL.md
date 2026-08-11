@@ -3,14 +3,14 @@ name: agent-ready-api
 description: Use the Agent Ready (agent-ready.dev) REST API to scan any public URL for AI agent-readability against the Vercel Agent Readability Spec, the llmstxt.org standard, and agent-protocol manifests (MCP server cards, A2A, agents.json, agent-permissions.json, UCP, x402, NLWeb). Activates for "scan this site for AI agent-readability", "run an Agent Ready scan on {URL}", "check the Agent Ready score for {URL}", "what's the agent-readability rating for {URL}", or any time the user wants a programmatic readability scan via HTTP. Picks this skill when the user does NOT have the Agent Ready MCP server installed — for MCP, use the `agent-ready-mcp` skill instead.
 metadata:
   author: agent-ready
-  version: "1.0.4"
+  version: "1.0.5"
   homepage: https://agent-ready.dev
   source: https://github.com/mlava/agent-ready-skills
 ---
 
 # Agent Ready REST API
 
-The Agent Ready (agent-ready.dev) REST API scores any public URL against ~70 checks across the Vercel Agent Readability Spec, the llmstxt.org standard, and the agent-protocol manifests (MCP server cards, A2A agent cards, agents.json, agent-permissions.json, UCP, x402, NLWeb), plus a separate 9-check accessibility sub-score (WCAG 2.2 / layout stability). Use this skill when the user wants to run a scan programmatically without setting up an MCP server — start a scan, poll for results, summarise the highest-impact findings.
+The Agent Ready (agent-ready.dev) REST API scores any public URL against ~70 checks across the Vercel Agent Readability Spec, the llmstxt.org standard, and the agent-protocol manifests (MCP server cards, A2A agent cards, agents.json, agent-permissions.json, UCP, x402, NLWeb), plus a separate 23-check accessibility sub-score (WCAG 2.2 / layout stability). Use this skill when the user wants to run a scan programmatically without setting up an MCP server — start a scan, poll for results, summarise the highest-impact findings.
 
 ## When to use
 
@@ -67,10 +67,10 @@ curl -X POST https://agent-ready.dev/api/v1/scans \
   -d '{"url":"https://example.com"}'
 ```
 
-The response returns **immediately** with a scan id and status:
+The response returns **immediately** — HTTP `202` with a scan id, its status, and the URL to poll:
 
 ```json
-{"id":"scan_01HXYZ...","status":"queued","shareUrl":null}
+{"id":"V1StGXR8_Z","status":"running","url":"https://example.com","pollUrl":"/api/v1/scans/V1StGXR8_Z"}
 ```
 
 Do **not** try to read a score from this response — it hasn't run yet. Capture `id` and continue.
@@ -84,20 +84,20 @@ Pass the user's URL verbatim including scheme, path, and trailing slash. The ser
 ## Step 3: Poll for results
 
 ```bash
-SCAN_ID="scan_01HXYZ..."
+SCAN_ID="V1StGXR8_Z"
 
 curl https://agent-ready.dev/api/v1/scans/$SCAN_ID \
   -H "Authorization: Bearer $AGENT_READY_API_KEY"
 ```
 
-Typical wall-clock: **15–60 seconds** for a Pro scan. Poll every 2–3 seconds until `status` flips from `queued`/`running` to `complete`:
+Typical wall-clock: **15–60 seconds** for a Pro scan. Poll every 2–3 seconds until `status` leaves `running` — the terminal values are `completed` and `failed`, and a `failed` scan (no page could be read) carries no usable score:
 
 ```bash
 while true; do
   result=$(curl -s https://agent-ready.dev/api/v1/scans/$SCAN_ID \
     -H "Authorization: Bearer $AGENT_READY_API_KEY")
   status=$(echo "$result" | jq -r .status)
-  if [ "$status" = "complete" ]; then break; fi
+  if [ "$status" != "running" ]; then break; fi
   sleep 3
 done
 echo "$result" | jq .
@@ -107,31 +107,30 @@ For full **Node / TypeScript** and **Python** start-and-poll equivalents, see [E
 
 ## Step 4: Summarise the findings
 
-The complete scan response is large (50+ checks). Don't dump raw JSON to the user. Lead with:
+The complete scan response is large (~70 checks, plus the accessibility pass). Don't dump raw JSON to the user. Lead with:
 
-1. **Overall score** (0–100) and its **rating band** — `excellent` (90–100), `good` (70–89), `fair` (50–69), `needs_improvement` (0–49). Use `result.score` and `result.rating`.
+1. **Overall score** (0–100) and its **rating band** — `excellent` (90–100), `good` (70–89), `fair` (50–69), `needs_improvement` (0–49). Use `result.vercelScore` and `result.vercelRating`.
 2. **llms.txt sub-score** if the site has an `llms.txt` (`result.llmstxtScore`), and the **accessibility sub-score** (`result.accessibilityScore`, 0–100 or `null` — a separate WCAG 2.2 / layout-stability score, not part of the overall score).
-3. **Top 3–5 highest-impact failing checks.** Look across `result.siteChecks`, `result.pageResults[].pageChecks`, `result.protocolResults`, `result.llmstxtChecks` for `status === "fail"`. Each check entry has `name`, `message`, and `howToFix` — surface those.
-4. **One-line next step.** Point the user at `result.shareUrl` for the full breakdown, or offer to draft a remediation plan from the failing checks.
+3. **Top 3–5 highest-impact failing checks.** Look across `result.siteChecks`, `result.pageResults[].checks`, `result.protocolResults`, `result.llmstxtChecks` for `status === "fail"`. Each check entry has `name`, `message`, and `howToFix` — surface those.
+4. **One-line next step.** Point the user at `https://agent-ready.dev/scan/{result.shareToken}` for the full breakdown, or offer to draft a remediation plan from the failing checks.
 
 Common response fields:
 
 | Field | Meaning |
 |---|---|
 | `id` | Scan id |
-| `status` | `queued` / `running` / `complete` |
-| `score` | Overall 0–100 |
-| `rating` | `excellent` / `good` / `fair` / `needs_improvement` |
-| `vercelScore` | Vercel Agent Readability Spec sub-score |
+| `status` | `running` / `completed` / `failed` |
+| `vercelScore` | Overall 0–100 readability score |
+| `vercelRating` | `excellent` / `good` / `fair` / `needs_improvement` |
 | `llmstxtScore` | llmstxt.org compliance sub-score |
 | `accessibilityScore` | Accessibility sub-score (A-series WCAG checks); 0–100 or `null` |
 | `siteChecks` | Site-wide check results (S1–S15) |
-| `pageResults` | Per-page check results (P1–P23) |
-| `protocolResults` | Protocol manifest check results (C1–C21); also carries the accessibility checks (A1–A23). A result with `details.notApplicable` had nothing to grade and is excluded from `accessibilityScore` |
+| `pageResults` | Per-page results; the checks are in `pageResults[].checks` (P1–P23) |
+| `protocolResults` | Protocol manifest check results (C1–C22); also carries the accessibility checks (A1–A23). A result with `details.notApplicable` had nothing to grade and is excluded from `accessibilityScore` |
 | `llmstxtChecks` | llms.txt check results (L1–L10) |
 | `pagesScanned` | Pages actually crawled |
 | `pagesDiscovered` | Pages found via sitemap/discovery |
-| `shareUrl` | Human-readable result page on agent-ready.dev |
+| `shareToken` | Result page is `https://agent-ready.dev/scan/{shareToken}` |
 
 ## Step 5: Search the Agent Ready docs (no key required)
 
