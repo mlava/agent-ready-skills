@@ -58,9 +58,9 @@ npx skills add mlava/agent-ready-skills/skills/agent-ready-cli
 
 ## What is Agent Ready?
 
-[Agent Ready](https://agent-ready.dev) runs ~70 checks across four spec families:
+[Agent Ready](https://agent-ready.dev) runs ~71 checks across four spec families:
 
-- **Vercel Agent Readability Spec** — 15 site-wide + 23 per-page checks (llms.txt, robots.txt, sitemap.xml, sitemap.md, AGENTS.md, JSON-LD, headings, markdown mirrors, content negotiation, code-block language tags, JS-rendering)
+- **Vercel Agent Readability Spec** — 15 site-wide + 24 per-page checks (llms.txt, robots.txt, sitemap.xml, sitemap.md, AGENTS.md, JSON-LD, headings, markdown mirrors, content negotiation, code-block language tags, JS-rendering)
 - **llmstxt.org** — 10 checks against the llms.txt file format
 - **Agent protocols** — MCP server cards (SEP-1649), A2A agent cards, agents.json, agent-permissions.json, UCP, x402, NLWeb
 - **Authentication discovery** — RFC 9728 PRM + RFC 8414 AS metadata, WorkOS `auth.md`
