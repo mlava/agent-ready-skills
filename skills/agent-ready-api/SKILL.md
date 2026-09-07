@@ -3,14 +3,14 @@ name: agent-ready-api
 description: Use the Agent Ready (agent-ready.dev) REST API to scan any public URL for AI agent-readability against the Vercel Agent Readability Spec, the llmstxt.org standard, and agent-protocol manifests (MCP server cards, A2A, agents.json, agent-permissions.json, UCP, x402, NLWeb). Activates for "scan this site for AI agent-readability", "run an Agent Ready scan on {URL}", "check the Agent Ready score for {URL}", "what's the agent-readability rating for {URL}", or any time the user wants a programmatic readability scan via HTTP. Picks this skill when the user does NOT have the Agent Ready MCP server installed — for MCP, use the `agent-ready-mcp` skill instead.
 metadata:
   author: agent-ready
-  version: "1.0.6"
+  version: "1.0.7"
   homepage: https://agent-ready.dev
   source: https://github.com/mlava/agent-ready-skills
 ---
 
 # Agent Ready REST API
 
-The Agent Ready (agent-ready.dev) REST API scores any public URL against ~71 checks across the Vercel Agent Readability Spec, the llmstxt.org standard, and the agent-protocol manifests (MCP server cards, A2A agent cards, agents.json, agent-permissions.json, UCP, x402, NLWeb), plus a separate 23-check accessibility sub-score (WCAG 2.2 / layout stability). Use this skill when the user wants to run a scan programmatically without setting up an MCP server — start a scan, poll for results, summarise the highest-impact findings.
+The Agent Ready (agent-ready.dev) REST API scores any public URL against ~72 checks across the Vercel Agent Readability Spec, the llmstxt.org standard, and the agent-protocol manifests (MCP server cards, A2A agent cards, agents.json, agent-permissions.json, UCP, x402, NLWeb), plus a separate 23-check accessibility sub-score (WCAG 2.2 / layout stability). Use this skill when the user wants to run a scan programmatically without setting up an MCP server — start a scan, poll for results, summarise the highest-impact findings.
 
 ## When to use
 
@@ -107,7 +107,7 @@ For full **Node / TypeScript** and **Python** start-and-poll equivalents, see [E
 
 ## Step 4: Summarise the findings
 
-The complete scan response is large (~71 checks, plus the accessibility pass). Don't dump raw JSON to the user. Lead with:
+The complete scan response is large (~72 checks, plus the accessibility pass). Don't dump raw JSON to the user. Lead with:
 
 1. **Overall score** (0–100) and its **rating band** — `excellent` (90–100), `good` (70–89), `fair` (50–69), `needs_improvement` (0–49). Use `result.vercelScore` and `result.vercelRating`.
 2. **llms.txt sub-score** if the site has an `llms.txt` (`result.llmstxtScore`), and the **accessibility sub-score** (`result.accessibilityScore`, 0–100 or `null` — a separate WCAG 2.2 / layout-stability score, not part of the overall score).
@@ -125,7 +125,7 @@ Common response fields:
 | `llmstxtScore` | llmstxt.org compliance sub-score |
 | `accessibilityScore` | Accessibility sub-score (A-series WCAG checks); 0–100 or `null` |
 | `siteChecks` | Site-wide check results (S1–S15) |
-| `pageResults` | Per-page results; the checks are in `pageResults[].checks` (P1–P24) |
+| `pageResults` | Per-page results; the checks are in `pageResults[].checks` (P1–P25) |
 | `protocolResults` | Protocol manifest check results (C1–C22); also carries the accessibility checks (A1–A23). A result with `details.notApplicable` had nothing to grade and is excluded from `accessibilityScore` |
 | `llmstxtChecks` | llms.txt check results (L1–L10) |
 | `pagesScanned` | Pages actually crawled |
