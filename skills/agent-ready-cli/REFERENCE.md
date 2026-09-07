@@ -40,6 +40,6 @@ Common API errors surfaced on stderr: `unauthorized` (missing/invalid key — ch
 - CLI source: https://github.com/mlava/agent-ready-cli
 - API quickstart: https://agent-ready.dev/quickstart
 - OpenAPI 3.1 spec: https://agent-ready.dev/api/v1/openapi.json
-- Methodology (~71 checks): https://agent-ready.dev/methodology
+- Methodology (~72 checks): https://agent-ready.dev/methodology
 - Dashboard (issue keys): https://agent-ready.dev/dashboard/api-keys
 - Pricing: https://agent-ready.dev/pricing
